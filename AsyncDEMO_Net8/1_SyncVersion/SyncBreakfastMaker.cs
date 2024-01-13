@@ -6,45 +6,44 @@ using System.Threading.Tasks;
 
 namespace AsyncDEMO_Net8._1_SyncVersion
 {
-    public class SyncBreakfastMaker
+    internal class SyncBreakfastMaker
     {
         public static void MakeBreakfast(DateTime startTime)
         {
-            Coffee cup = MakeCoffee();
-            TimestampedWrite("Coffee is ready", startTime);
+            var previousConsoleColor = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            Console.WriteLine("Preparing breakfast:");
+            Console.WriteLine();
 
             bool fryingPanIsHot = HeatFryingPan();
-            TimestampedWrite("Frying pan is hot", startTime);
+            Helper.WriteWithElapsedTime("Frying pan is hot", startTime);
 
             int numberOfEggs = 2;
             List<Egg> eggs = FryEggs(numberOfEggs);
-            TimestampedWrite("Eggs are ready", startTime);
+            Helper.WriteWithElapsedTime("Eggs are ready", startTime);
 
             int numberOfBaconSlices = 3;
             List<Bacon> baconSlices = FryBacon(numberOfBaconSlices);
-            TimestampedWrite("Bacon is ready", startTime);
+            Helper.WriteWithElapsedTime("Bacon is ready", startTime);
+
+            Coffee cup = MakeCoffee();
+            Helper.WriteWithElapsedTime("Coffee is ready", startTime);
 
             int numberOfToastSlices = 2;
             List<Toast> toastSlices = MakeToast(numberOfToastSlices);
-            TimestampedWrite("Toast has popped", startTime);
+            Helper.WriteWithElapsedTime("Toast has popped", startTime);
 
             SpreadButterOnToast(toastSlices);
             SpreadJamOnToast(toastSlices);
-            TimestampedWrite("Toast is ready", startTime);
+            Helper.WriteWithElapsedTime("Toast is ready", startTime);
 
             Juice juice = PourJuice();
-            TimestampedWrite("Juice is ready", startTime);
+            Helper.WriteWithElapsedTime("Juice is ready", startTime);
 
-            TimestampedWrite("Breakfast is ready!", startTime);
-        }
+            Helper.WriteWithElapsedTime("Breakfast is ready!", startTime);
 
-        private static Coffee MakeCoffee()
-        {
-            Console.WriteLine("Making coffee...");
-
-            Task.Delay(3000).Wait();
-
-            return new Coffee();
+            Console.ForegroundColor = previousConsoleColor;
         }
 
         private static bool HeatFryingPan()
@@ -53,7 +52,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
 
             bool isReady = false;
 
-            Task.Delay(3000).Wait();
+            Task.Delay(Constant.TaskDuration.HeatPan).Wait();
 
             isReady = true;
 
@@ -66,7 +65,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
 
             List<Egg> eggs = new();
 
-            Task.Delay(3000).Wait();
+            Task.Delay(Constant.TaskDuration.FryEggs).Wait();
 
             for(int i = 0; i < numberOfEggs; i++)
             {
@@ -82,7 +81,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
 
             List<Bacon> baconSlices = new();
 
-            Task.Delay(3000).Wait();
+            Task.Delay(Constant.TaskDuration.FryBacon).Wait();
 
             for (int i = 0; i < numberOfSlices; i++)
             {
@@ -92,13 +91,22 @@ namespace AsyncDEMO_Net8._1_SyncVersion
             return baconSlices;
         }
 
+        private static Coffee MakeCoffee()
+        {
+            Console.WriteLine("Making coffee...");
+
+            Task.Delay(Constant.TaskDuration.MakeCoffee).Wait();
+
+            return new Coffee();
+        }
+
         private static List<Toast> MakeToast(int numberOfSlices)
         {
             Console.WriteLine($"Toasting {numberOfSlices} slices of bread...");
 
             List<Toast> toastSlices = new();
 
-            Task.Delay(3000).Wait();
+            Task.Delay(Constant.TaskDuration.MakeToast).Wait();
 
             for (int i = 0; i < numberOfSlices; i++)
             {
@@ -123,14 +131,6 @@ namespace AsyncDEMO_Net8._1_SyncVersion
             Console.WriteLine("Pouring orange juice...");
 
             return new Juice();
-        }
-
-        private static void TimestampedWrite (string text, DateTime startTime)
-        {
-            DateTime currentTime = DateTime.Now;
-            var elapsedTime = currentTime - startTime;
-            Console.WriteLine($"{elapsedTime.TotalSeconds.ToString(Constant.SecondsFormat)} seconds: {text}");
-            Console.WriteLine();
         }
     }
 }
