@@ -9,6 +9,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{9021AB
 	ProjectSection(SolutionItems) = preProject
 		Images\FinalProcess.png = Images\FinalProcess.png
 		Images\FinalProcess.vsdx = Images\FinalProcess.vsdx
+		Images\IndividualTaskDurations.png = Images\IndividualTaskDurations.png
+		Images\Results_AsyncFinal.png = Images\Results_AsyncFinal.png
+		Images\Results_AsyncWithDeferredAwait.png = Images\Results_AsyncWithDeferredAwait.png
+		Images\Results_AsyncWithDeferredAwaitAndTaskComposition.png = Images\Results_AsyncWithDeferredAwaitAndTaskComposition.png
+		Images\Results_AsyncWithImmediateAwait.png = Images\Results_AsyncWithImmediateAwait.png
+		Images\Results_SyncVersion.png = Images\Results_SyncVersion.png
 		Images\SynchronousProcess.png = Images\SynchronousProcess.png
 		Images\SynchronousProcess.vsdx = Images\SynchronousProcess.vsdx
 	EndProjectSection
