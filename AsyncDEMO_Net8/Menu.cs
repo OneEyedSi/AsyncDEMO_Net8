@@ -43,6 +43,15 @@ namespace AsyncDEMO_Net8
             task.Wait();
         }
 
+        [MenuMethod("Make breakfast asynchronously, with deferred await", DisplayOrder = 3)]
+        public static void AsyncBreakfast_DeferredAwait()
+        {
+            var breakfastMaker = new AsyncDeferredAwaitBreakfastMaker();
+            var task = MakeBreakfastAsync("Making breakfast asynchronously, with deferred await:",
+                breakfastMaker.MakeBreakfastAsync);
+            task.Wait();
+        }
+
         private static async Task MakeBreakfastAsync(string title, Func<DateTime, Task> makeBreakfastMethodAync)
         {
             title = title.Trim();
