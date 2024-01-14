@@ -88,6 +88,15 @@ namespace AsyncDEMO_Net8
             task.Wait();
         }
 
+        [MenuMethod("Make breakfast asynchronously, with deferred await and composition", DisplayOrder = 5)]
+        public static void AsyncBreakfast_WithComposition()
+        {
+            var breakfastMaker = new AsyncBreakfastMakerWithTaskComposition();
+            var task = MakeBreakfastAsync("Making breakfast asynchronously,\nwith deferred await and task composition:",
+                breakfastMaker.MakeBreakfastAsync);
+            task.Wait();
+        }
+
         private static async Task MakeBreakfastAsync(string title, Func<DateTime, Task> makeBreakfastMethodAync)
         {
             title = title.Trim();
