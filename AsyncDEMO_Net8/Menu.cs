@@ -1,4 +1,5 @@
 ﻿using AsyncDEMO_Net8._1_SyncVersion;
+using AsyncDEMO_Net8._2_AsyncSimpleAwait;
 using Gold.ConsoleMenu;
 using System;
 using System.Collections.Generic;
@@ -28,18 +29,47 @@ namespace AsyncDEMO_Net8
             DoOtherWork(startTime);
             Console.WriteLine();
 
-            var endTime = DateTime.Now;
-
-            var timeTaken = endTime - startTime;
-
-            Console.WriteLine($"Total time taken: {timeTaken.TotalSeconds.ToString(Constant.SecondsFormat)} seconds");
+            ConsoleHelper.WriteTimeTaken(startTime);
         }
 
-            var endTime = DateTime.Now;
+        [MenuMethod("Make breakfast asynchronously, with immediate await")]
+        public static void AsyncBreakfast_ImmediateAwait()
+        {
+            var breakfastMaker = new AsyncImmediateAwaitBreakfastMaker();
+            var task = MakeBreakfastAsync("Making breakfast asynchronously, with immediate await:",
+                breakfastMaker.MakeBreakfastAsync);
+            // Note that this leaves all exceptions in async code wrapped in an AggregateException.
+            // See Stackoverflow answer from Stephen Cleary: https://stackoverflow.com/a/9343733/216440
+            task.Wait();
+        }
 
-            var timeTaken = endTime - startTime;
+        private static async Task MakeBreakfastAsync(string title, Func<DateTime, Task> makeBreakfastMethodAync)
+        {
+            title = title.Trim();
+            if (!title.EndsWith(':'))
+            {
+                title += ':';
+            }
 
-            Console.WriteLine($"Total time taken: {timeTaken.TotalSeconds.ToString(Constant.SecondsFormat)} seconds");
+            Console.WriteLine();
+            Console.WriteLine(title);
+            Console.WriteLine();
+
+            WriteTaskDurations();
+
+            var startTime = DateTime.Now;
+
+            var task = makeBreakfastMethodAync(startTime);
+            
+            Console.WriteLine();
+
+            DoOtherWork(startTime);
+
+            await task;
+
+            Console.WriteLine();
+
+            ConsoleHelper.WriteTimeTaken(startTime);
         }
 
         private static void DoOtherWork(DateTime startTime)
@@ -48,7 +78,7 @@ namespace AsyncDEMO_Net8
 
             taskInfo.WriteInTaskColor("Doing other work after making breakfast...");
 
-            Task.Delay(Constant.TaskDuration.OtherWork).Wait();
+            Task.Delay(taskInfo.Duration).Wait();
 
             taskInfo.WriteWithElapsedTime("Other work is finished", startTime);
         }
