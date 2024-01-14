@@ -93,9 +93,9 @@ namespace AsyncDEMO_Net8
             tasks.Add(new TaskInfo(TaskId.FryBacon, ConsoleColor.Red, 5000));
             tasks.Add(new TaskInfo(TaskId.MakeCoffee, ConsoleColor.DarkYellow, 4000));
             tasks.Add(new TaskInfo(TaskId.MakeToast, ConsoleColor.Yellow, 2000));
-            tasks.Add(new TaskInfo(TaskId.SpreadButter, ConsoleColor.Cyan, 0));
-            tasks.Add(new TaskInfo(TaskId.SpreadJam, ConsoleColor.DarkCyan, 0));
-            tasks.Add(new TaskInfo(TaskId.PourJuice, ConsoleColor.Blue, 0));
+            tasks.Add(new TaskInfo(TaskId.SpreadButter, ConsoleColor.Cyan, 1000));
+            tasks.Add(new TaskInfo(TaskId.SpreadJam, ConsoleColor.DarkCyan, 1000));
+            tasks.Add(new TaskInfo(TaskId.PourJuice, ConsoleColor.Blue, 500));
             tasks.Add(new TaskInfo(TaskId.OtherWork, ConsoleColor.DarkGreen, 5000));
 
             return tasks;

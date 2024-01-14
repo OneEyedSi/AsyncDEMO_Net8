@@ -100,6 +100,8 @@ namespace AsyncDEMO_Net8._2_AsyncVersions
 
             taskInfo.WriteInTaskColor($"Spreading butter on {toastSlices.Count} slices of toast...");
 
+            Task.Delay(taskInfo.Duration).Wait();
+
             taskInfo.WriteWithElapsedTime("Butter has been spread", startTime);
         }
 
@@ -109,6 +111,8 @@ namespace AsyncDEMO_Net8._2_AsyncVersions
 
             taskInfo.WriteInTaskColor($"Spreading jam on {toastSlices.Count} slices of toast...");
 
+            Task.Delay(taskInfo.Duration).Wait();
+
             taskInfo.WriteWithElapsedTime("Jam has been spread", startTime);
         }
 
@@ -117,6 +121,8 @@ namespace AsyncDEMO_Net8._2_AsyncVersions
             var taskInfo = TaskInfo.GetTask(TaskId.PourJuice);
 
             taskInfo.WriteInTaskColor("Pouring orange juice...");
+
+            Task.Delay(taskInfo.Duration).Wait();
 
             taskInfo.WriteWithElapsedTime("Juice is ready", startTime);
 

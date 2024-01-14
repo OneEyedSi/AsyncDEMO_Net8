@@ -45,21 +45,21 @@ The first asynchronous version of the code calls each breakfast task with an imm
 ![A screenshot from the demo application, showing the tasks executed by the asynchronous version of the code with immediate awaits](Images/Results_AsyncWithImmediateAwait.png "Results of asynchronous version with immediate awaits")
 
 ### Asynchronous Version with Deferred awaits
-The second asynchronous version of the code defers the `await`s for each asynchronous breakfast task.  As a result the asynchronous tasks execute consecutively, not sequentially, so this version is very fast.  However, it has two problems:
+The second asynchronous version of the code defers the `await`s for each asynchronous breakfast task.  As a result the asynchronous tasks execute concurrently, not sequentially, so this version is very fast.  However, it has two problems:
 
-1. The various tasks relating to frying execute consecutively.  So it attempts to fry the eggs before the pan has finished heating, and fry the bacon before the eggs have finished.
+1. The various tasks relating to frying execute in parallel.  So it attempts to fry the eggs before the pan has finished heating, and fry the bacon before the eggs have finished.
 
 1. The tasks for spreading the butter and jam on the toast have to wait for the bacon to finish frying, the coffee to finish brewing, and the toast to finish.  This may result in an unnecessary delay, as spreading the butter and jam should only depend on the toast being ready; it's okay for those tasks to execute while the bacon is still frying and the coffee is still brewing.
 
 ![A screenshot from the demo application, showing the tasks executed by the asynchronous version of the code with deferred awaits](Images/Results_AsyncWithDeferredAwait.png "Results of asynchronous version with deferred awaits")
 
 ### Asynchronous Version with Deferred awaits and Task Composition
-The third asynchronous version of the code adds task composition to fix the second problem: Allowing the spreading of the butter and jam to occur even if the bacon is still frying and the coffee is still brewing.  However, it still has the first problem where the various frying-related tasks execute consecutively:
+The third asynchronous version of the code adds task composition to fix the second problem: Allowing the spreading of the butter and jam to occur even if the bacon is still frying and the coffee is still brewing.  However, it still has the first problem where the various frying-related tasks execute in parallel:
 
 ![A screenshot from the demo application, showing the tasks executed by the asynchronous version of the code with deferred awaits and task composition](Images/Results_AsyncWithDeferredAwaitAndTaskComposition.png "Results of asynchronous version with deferred awaits and task composition")
 
 ### Final Asynchronous Version
-The fourth and final asynchronous version of the code uses a combination of immediate and deferred `await`s to fix the first problem, where the various frying-related tasks were executing consecutively.  As a result it runs slower than the purely deferred `await` version of the code, but it executes the tasks in the correct order:
+The fourth and final asynchronous version of the code uses a combination of immediate and deferred `await`s to fix the first problem, where the various frying-related tasks were executing in parallel.  As a result it runs slower than the purely deferred `await` version of the code, but it executes the tasks in the correct order.  Pouring the juice has to wait until all other breakfast tasks are complete before it runs:
 
 ![A screenshot from the demo application, showing the tasks executed by the final asynchronous version of the code](Images/Results_AsyncFinal.png "Results of the final asynchronous version")
 

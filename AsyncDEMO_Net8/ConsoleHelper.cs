@@ -57,6 +57,7 @@ namespace AsyncDEMO_Net8
 
         public static void WriteTotalTimeTaken(DateTime startTime)
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
             WriteTimeTaken("TOTAL TIME TAKEN", startTime);
         }
     }
