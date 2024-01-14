@@ -14,16 +14,26 @@ namespace AsyncDEMO_Net8
         [MenuMethod("Make breakfast synchronously")]
         public static void SyncBreakfast()
         {
-            var startTime = DateTime.Now;
-
+            Console.WriteLine();
             Console.WriteLine("Making breakfast synchronously:");
             Console.WriteLine();
 
             WriteTaskDurations();
 
+            var startTime = DateTime.Now;
+
             SyncBreakfastMaker.MakeBreakfast(startTime);
+            Console.WriteLine();
 
             DoOtherWork(startTime);
+            Console.WriteLine();
+
+            var endTime = DateTime.Now;
+
+            var timeTaken = endTime - startTime;
+
+            Console.WriteLine($"Total time taken: {timeTaken.TotalSeconds.ToString(Constant.SecondsFormat)} seconds");
+        }
 
             var endTime = DateTime.Now;
 
@@ -34,16 +44,13 @@ namespace AsyncDEMO_Net8
 
         private static void DoOtherWork(DateTime startTime)
         {
-            var previousConsoleColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            var taskInfo = TaskInfo.GetTask(TaskId.OtherWork);
 
-            Console.WriteLine("Doing other work after making breakfast...");
+            taskInfo.WriteInTaskColor("Doing other work after making breakfast...");
 
             Task.Delay(Constant.TaskDuration.OtherWork).Wait();
 
-            Helper.WriteWithElapsedTime("Other work is finished", startTime);
-
-            Console.ForegroundColor = previousConsoleColor;
+            taskInfo.WriteWithElapsedTime("Other work is finished", startTime);
         }
 
         private static void WriteTaskDurations()
@@ -52,24 +59,19 @@ namespace AsyncDEMO_Net8
             Console.WriteLine();
 
             Console.WriteLine("Breakfast tasks:");
-            WriteTaskDuration("Heat pan", Constant.TaskDuration.HeatPan);
-            WriteTaskDuration("Fry eggs", Constant.TaskDuration.FryEggs);
-            WriteTaskDuration("Fry bacon", Constant.TaskDuration.FryBacon);
-            WriteTaskDuration("Make coffee", Constant.TaskDuration.MakeCoffee);
-            WriteTaskDuration("Make toast", Constant.TaskDuration.MakeToast);
-            WriteTaskDuration("Add butter and jam to toast", 0);
-            WriteTaskDuration("Pour juice", 0);
-            Console.WriteLine();
 
-            WriteTaskDuration("Other, non-breakfast, work", Constant.TaskDuration.OtherWork);
+            foreach (TaskInfo task in TaskInfo.GetTasks().Where(t => t.Id != TaskId.OtherWork))
+            {
+                Console.WriteLine(task.DurationText);
+            }
 
             Console.WriteLine();
-        }
 
-        private static void WriteTaskDuration(string taskTitle, int durationMilliseconds)
-        {
-            string durationSecondsText = Decimal.Divide(durationMilliseconds, 1000).ToString(Constant.SecondsFormat);
-            Console.WriteLine($"{taskTitle}: {durationSecondsText} seconds");
+            TaskInfo otherWork = TaskInfo.GetTask(TaskId.OtherWork);
+            Console.WriteLine(
+                $"Other, non-breakfast, work: {otherWork.DurationSeconds.ToString(Constant.SecondsFormat)} seconds");
+
+            Console.WriteLine();
         }
     }
 }
