@@ -49,7 +49,7 @@ namespace AsyncDEMO_Net8
 
             Console.ForegroundColor = TextColor;
 
-            string indent = new string(' ', 4);
+            string indent = Constant.Indent;
             if (Id == TaskId.OtherWork || Id == TaskId.Unknown)
             {
                 indent = "";

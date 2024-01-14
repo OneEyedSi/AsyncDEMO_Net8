@@ -9,5 +9,6 @@ namespace AsyncDEMO_Net8
     public static class Constant
     {
         public const string SecondsFormat = "F1";
+        public const string Indent = "    ";
     }
 }

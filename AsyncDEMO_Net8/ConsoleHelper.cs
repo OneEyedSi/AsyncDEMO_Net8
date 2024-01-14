@@ -46,13 +46,18 @@ namespace AsyncDEMO_Net8
             Console.ForegroundColor = previousConsoleColor;
         }
 
-        public static void WriteTimeTaken(DateTime startTime)
+        public static void WriteTimeTaken(string title, DateTime startTime)
         {
             var endTime = DateTime.Now;
 
             var timeTaken = endTime - startTime;
 
-            Console.WriteLine($"Total time taken: {timeTaken.TotalSeconds.ToString(Constant.SecondsFormat)} seconds");
+            Console.WriteLine($"{title}: {timeTaken.TotalSeconds.ToString(Constant.SecondsFormat)} seconds");
+        }
+
+        public static void WriteTotalTimeTaken(DateTime startTime)
+        {
+            WriteTimeTaken("TOTAL TIME TAKEN", startTime);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AsyncDEMO_Net8._1_SyncVersion;
 using AsyncDEMO_Net8._2_AsyncSimpleAwait;
+using AsyncDEMO_Net8._2_AsyncVersions;
 using Gold.ConsoleMenu;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace AsyncDEMO_Net8
     [MenuClass("Menu")]
     public class Menu
     {
-        [MenuMethod("Make breakfast synchronously")]
+        [MenuMethod("Make breakfast synchronously", DisplayOrder = 1)]
         public static void SyncBreakfast()
         {
             Console.WriteLine();
@@ -24,15 +25,14 @@ namespace AsyncDEMO_Net8
             var startTime = DateTime.Now;
 
             SyncBreakfastMaker.MakeBreakfast(startTime);
-            Console.WriteLine();
 
             DoOtherWork(startTime);
             Console.WriteLine();
 
-            ConsoleHelper.WriteTimeTaken(startTime);
+            ConsoleHelper.WriteTotalTimeTaken(startTime);
         }
 
-        [MenuMethod("Make breakfast asynchronously, with immediate await")]
+        [MenuMethod("Make breakfast asynchronously, with immediate await", DisplayOrder = 2)]
         public static void AsyncBreakfast_ImmediateAwait()
         {
             var breakfastMaker = new AsyncImmediateAwaitBreakfastMaker();
@@ -60,8 +60,6 @@ namespace AsyncDEMO_Net8
             var startTime = DateTime.Now;
 
             var task = makeBreakfastMethodAync(startTime);
-            
-            Console.WriteLine();
 
             DoOtherWork(startTime);
 
@@ -69,14 +67,14 @@ namespace AsyncDEMO_Net8
 
             Console.WriteLine();
 
-            ConsoleHelper.WriteTimeTaken(startTime);
+            ConsoleHelper.WriteTotalTimeTaken(startTime);
         }
 
         private static void DoOtherWork(DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.OtherWork);
 
-            taskInfo.WriteInTaskColor("Doing other work after making breakfast...");
+            taskInfo.WriteInTaskColor("Caller doing other non-breakfast work...");
 
             Task.Delay(taskInfo.Duration).Wait();
 
@@ -88,18 +86,29 @@ namespace AsyncDEMO_Net8
             Console.WriteLine("Individual task durations:");
             Console.WriteLine();
 
-            Console.WriteLine("Breakfast tasks:");
+            string indent = Constant.Indent;
+
+            Console.WriteLine($"{indent}Breakfast tasks:");
+            decimal breakfastTotalTaskDuration = 0M;
 
             foreach (TaskInfo task in TaskInfo.GetTasks().Where(t => t.Id != TaskId.OtherWork))
             {
-                Console.WriteLine(task.DurationText);
+                Console.WriteLine(indent + indent + task.DurationText);
+                breakfastTotalTaskDuration += task.DurationSeconds;
             }
 
-            Console.WriteLine();
+            Console.WriteLine(
+                $"{indent}Total duration of breakfast tasks: {breakfastTotalTaskDuration} seconds");
 
             TaskInfo otherWork = TaskInfo.GetTask(TaskId.OtherWork);
             Console.WriteLine(
-                $"Other, non-breakfast, work: {otherWork.DurationSeconds.ToString(Constant.SecondsFormat)} seconds");
+                $"{indent}Other non-breakfast work: {otherWork.DurationSeconds.ToString(Constant.SecondsFormat)} seconds");
+
+            decimal totalDuration = breakfastTotalTaskDuration + otherWork.DurationSeconds;
+            string message = $"TOTAL DURATION OF ALL TASKS: {totalDuration} seconds";
+            string horizontalDivider = new string('-', message.Length);
+            Console.WriteLine(indent + horizontalDivider);
+            Console.WriteLine(indent + message);
 
             Console.WriteLine();
         }

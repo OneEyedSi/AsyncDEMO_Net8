@@ -13,34 +13,25 @@ namespace AsyncDEMO_Net8._1_SyncVersion
             var textColor = ConsoleColor.DarkGray;
 
             ConsoleHelper.WriteInColor("Preparing breakfast:", textColor);
-            Console.WriteLine();
 
             HeatFryingPan(startTime);
-            Console.WriteLine();
 
             int numberOfEggs = 2;
             List<Egg> eggs = FryEggs(numberOfEggs, startTime);
-            Console.WriteLine();
 
             int numberOfBaconSlices = 3;
             List<Bacon> baconSlices = FryBacon(numberOfBaconSlices, startTime);
-            Console.WriteLine();
 
             Coffee cup = MakeCoffee(startTime);
-            Console.WriteLine();
 
             int numberOfToastSlices = 2;
             List<Toast> toastSlices = MakeToast(numberOfToastSlices, startTime);
-            Console.WriteLine();
 
             SpreadButterOnToast(toastSlices, startTime);
-            Console.WriteLine();
 
             SpreadJamOnToast(toastSlices, startTime);
-            Console.WriteLine();
 
             Juice juice = PourJuice(startTime);
-            Console.WriteLine();
 
             ConsoleHelper.WriteWithElapsedTime("Breakfast is ready!", startTime, textColor);
         }
