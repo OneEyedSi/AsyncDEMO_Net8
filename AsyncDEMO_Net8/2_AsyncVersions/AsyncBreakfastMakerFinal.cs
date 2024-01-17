@@ -14,23 +14,25 @@ namespace AsyncDEMO_Net8._2_AsyncVersions
 
             ConsoleHelper.WriteInColor("Preparing breakfast:", textColor);
 
-            // Deferring the await for heating the pan and frying the eggs doesn't work: 
-            // The pan must be heated before frying the eggs and the eggs must be finished before 
-            // frying the bacon.  So go back to immediate awaits for heating the pan and frying 
-            // the eggs.
+            // Use immediate awaits for heating the pan and frying the eggs: 
+            // This will ensure the pan finishes heating before starting to fry the eggs, and the 
+            // eggs finish frying before starting to fry the bacon.  
             await HeatFryingPanAsync(startTime);
 
             int numberOfEggs = 2;
             List<Egg> eggs = await FryEggsAsync(numberOfEggs, startTime);
 
+            // Defer the await for frying the bacon: We're happy for it to run in parallel with 
+            // making the coffee and preparing the toast.  Running the three tasks in parallel 
+            // reduces execution time.
             int numberOfBaconSlices = 3;
             Task<List<Bacon>> baconSlicesTask = FryBaconAsync(numberOfBaconSlices, startTime);
 
             Task<Coffee> cupTask = MakeCoffeeAsync(startTime);
 
-            // Fixes the second problem: Now spreading butter and jam on toast only have to wait 
-            // for the toast to finish, they're no longer dependent on bacon frying and making 
-            // coffee finishing.
+            // The PrepareToastAsync method fixes the second problem: Now spreading butter and jam 
+            // on the toast only has to wait for the toast to finish, it no longer has to wait 
+            // until the bacon frying and the coffee making have finished.
             int numberOfToastSlices = 2;
             Task<List<Toast>> toastSlicesTask = PrepareToastAsync(numberOfToastSlices, startTime);
 

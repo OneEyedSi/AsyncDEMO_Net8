@@ -106,7 +106,7 @@ namespace AsyncDEMO_Net8
             task.Wait();
         }
 
-        private static async Task MakeBreakfastAsync(string title, Func<DateTime, Task> makeBreakfastMethodAync)
+        private static async Task MakeBreakfastAsync(string title, Func<DateTime, Task> makeBreakfastMethodAsync)
         {
             title = title.Trim();
             if (!title.EndsWith(':'))
@@ -120,7 +120,7 @@ namespace AsyncDEMO_Net8
 
             var startTime = DateTime.Now;
 
-            var task = makeBreakfastMethodAync(startTime);
+            var task = makeBreakfastMethodAsync(startTime);
 
             DoOtherWork(startTime);
 
