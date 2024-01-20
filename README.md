@@ -27,15 +27,15 @@ So the most efficient way of executing the process would be:
 
 This requires the long-running steps to be performed asynchronously.
 
-## Demo Application
+## Demo Application Task Durations
 The various tasks in the demo project have the following durations:
 
 ![A screenshot from the demo application, displaying the durations of each individual task](Images/IndividualTaskDurations.png "Individual task durations in demo application")
 
 Note that in addition to the tasks required to make breakfast, the calling code has other work to perform as well.
 
-### Synchronous Version
-#### The Code
+## Synchronous Version
+### The Code
 Each method representing a breakfast task, such as frying eggs or making toast, or the other work performed by the calling code, has the same three steps:
 
 1. Write to the console that the task is starting;
@@ -113,7 +113,7 @@ public static void SyncBreakfast()
 }
 ```
 
-#### Execution
+### Execution
 The synchronous version of the code executes each breakfast task sequentially, then it executes the other work performed by the calling code.  Since the synchronous code executes each task sequentially its duration is the sum of the durations of each individual task:
 
 ![A screenshot from the demo application, showing the tasks executed by the synchronous code, along with their durations](Images/Results_SyncVersion.png "Results of synchronous version")
