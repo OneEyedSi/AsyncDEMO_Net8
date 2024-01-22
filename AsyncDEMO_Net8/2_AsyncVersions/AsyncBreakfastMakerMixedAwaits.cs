@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsyncDEMO_Net8._2_AsyncVersions
 {
-    internal class AsyncBreakfastMakerFinal : AsyncBreakfastMakerBase
+    internal class AsyncBreakfastMakerMixedAwaits : AsyncBreakfastMakerBase
     {
         public override async Task MakeBreakfastAsync(DateTime startTime)
         {

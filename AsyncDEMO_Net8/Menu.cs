@@ -97,11 +97,14 @@ namespace AsyncDEMO_Net8
             task.Wait();
         }
 
-        [MenuMethod("Make breakfast asynchronously, with combination await and composition (final version)", DisplayOrder = 6)]
-        public static void AsyncBreakfast_Final()
+        [MenuMethod("Make breakfast asynchronously, with mixed awaits and composition", DisplayOrder = 6)]
+        public static void AsyncBreakfast_MixedAwaits()
         {
-            var breakfastMaker = new AsyncBreakfastMakerFinal();
-            var task = MakeBreakfastAsync("Making breakfast asynchronously,\nwith combination await and task composition (final version):",
+            var breakfastMaker = new AsyncBreakfastMakerMixedAwaits();
+            var task = MakeBreakfastAsync("Making breakfast asynchronously,\nwith mixed awaits and task composition:",
+                breakfastMaker.MakeBreakfastAsync);
+            task.Wait();
+        }
                 breakfastMaker.MakeBreakfastAsync);
             task.Wait();
         }
