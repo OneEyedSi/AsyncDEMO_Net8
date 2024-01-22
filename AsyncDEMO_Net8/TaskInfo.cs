@@ -45,19 +45,13 @@ namespace AsyncDEMO_Net8
 
         public void WriteInTaskColor(string message)
         {
-            var previousConsoleColor = Console.ForegroundColor;
-
-            Console.ForegroundColor = TextColor;
-
-            string indent = Constant.Indent;
+            int indentLevel = 1;
             if (Id == TaskId.OtherWork || Id == TaskId.Unknown)
             {
-                indent = "";
+                indentLevel = 0;
             }
 
-            Console.WriteLine($"{indent}{message}");
-
-            Console.ForegroundColor = previousConsoleColor;
+            ConsoleHelper.WriteInColor(message, TextColor, indentLevel);
         }
 
         public void WriteWithElapsedTime(string message, DateTime startTime)
