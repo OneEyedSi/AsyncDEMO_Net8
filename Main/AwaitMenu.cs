@@ -1,6 +1,5 @@
-﻿using AsyncDEMO_Net8._1_SyncVersion;
-using AsyncDEMO_Net8._2_AsyncSimpleAwait;
-using AsyncDEMO_Net8._2_AsyncVersions;
+﻿using AwaitDemo;
+using Common;
 using Gold.ConsoleMenu;
 using System;
 using System.Collections.Generic;
@@ -8,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncDEMO_Net8
+namespace Main
 {
-    [MenuClass("Menu")]
-    public class Menu
+    [MenuClass("Await Menu", ParentMenuName = "Main Menu")]
+    public class AwaitMenu
     {
         [MenuMethod("List individual task durations", DisplayOrder = 1)]
         public static void DisplayTaskDurations()
@@ -102,9 +101,6 @@ namespace AsyncDEMO_Net8
         {
             var breakfastMaker = new AsyncBreakfastMakerMixedAwaits();
             var task = MakeBreakfastAsync("Making breakfast asynchronously,\nwith mixed awaits and task composition:",
-                breakfastMaker.MakeBreakfastAsync);
-            task.Wait();
-        }
                 breakfastMaker.MakeBreakfastAsync);
             task.Wait();
         }

@@ -1,13 +1,13 @@
-﻿using AsyncDEMO_Net8._2_AsyncVersions;
+﻿using Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncDEMO_Net8._2_AsyncSimpleAwait
+namespace AwaitDemo
 {
-    internal class AsyncImmediateAwaitBreakfastMaker : AsyncBreakfastMakerBase
+    public class AsyncImmediateAwaitBreakfastMaker : AsyncBreakfastMakerBase
     {
         public override async Task MakeBreakfastAsync(DateTime startTime)
         {

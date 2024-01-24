@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Common;
 
-namespace AsyncDEMO_Net8
+namespace AwaitDemo
 {
-    internal enum TaskId
+    public enum TaskId
     {
         Unknown = 0,
         HeatPan,
@@ -20,7 +21,7 @@ namespace AsyncDEMO_Net8
         OtherWork
 }
 
-    internal class TaskInfo
+    public class TaskInfo
     {
         private static readonly IList<TaskInfo> _tasks = InitializeTasks();
         public TaskInfo(TaskId id, ConsoleColor textColor, int duration)

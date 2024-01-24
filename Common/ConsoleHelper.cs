@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace AsyncDEMO_Net8
+namespace Common
 {
     public class ConsoleHelper
     {

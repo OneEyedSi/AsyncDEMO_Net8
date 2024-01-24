@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncDEMO_Net8._2_AsyncVersions
+namespace AwaitDemo
 {
-    internal class AsyncBreakfastMakerMixedAwaits : AsyncBreakfastMakerBase
+    public class AsyncBreakfastMakerWithTaskComposition : AsyncBreakfastMakerBase
     {
         public override async Task MakeBreakfastAsync(DateTime startTime)
         {
@@ -14,17 +15,14 @@ namespace AsyncDEMO_Net8._2_AsyncVersions
 
             ConsoleHelper.WriteInColor("Preparing breakfast:", textColor);
 
-            // Use immediate awaits for heating the pan and frying the eggs: 
-            // This will ensure the pan finishes heating before starting to fry the eggs, and the 
-            // eggs finish frying before starting to fry the bacon.  
-            await HeatFryingPanAsync(startTime);
+            // Problem: Deferring the await for heating the pan and frying the eggs doesn't work: 
+            // The pan must be heated before frying the eggs and the eggs must be finished before 
+            // frying the bacon.
+            Task heatPanTask = HeatFryingPanAsync(startTime);
 
             int numberOfEggs = 2;
-            List<Egg> eggs = await FryEggsAsync(numberOfEggs, startTime);
+            Task<List<Egg>> eggsTask = FryEggsAsync(numberOfEggs, startTime);
 
-            // Defer the await for frying the bacon: We're happy for it to run in parallel with 
-            // making the coffee and preparing the toast.  Running the three tasks in parallel 
-            // reduces execution time.
             int numberOfBaconSlices = 3;
             Task<List<Bacon>> baconSlicesTask = FryBaconAsync(numberOfBaconSlices, startTime);
 
@@ -36,6 +34,8 @@ namespace AsyncDEMO_Net8._2_AsyncVersions
             int numberOfToastSlices = 2;
             Task<List<Toast>> toastSlicesTask = PrepareToastAsync(numberOfToastSlices, startTime);
 
+            await heatPanTask;
+            var eggs = await eggsTask;
             var baconSlices = await baconSlicesTask;
             var cup = await cupTask;
             var toastSlices = await toastSlicesTask;

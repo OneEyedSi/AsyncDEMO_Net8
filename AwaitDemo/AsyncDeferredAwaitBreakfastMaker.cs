@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncDEMO_Net8._2_AsyncVersions
+namespace AwaitDemo
 {
-    internal class AsyncDeferredAwaitBreakfastMaker : AsyncBreakfastMakerBase
+    public class AsyncDeferredAwaitBreakfastMaker : AsyncBreakfastMakerBase
     {
         public override async Task MakeBreakfastAsync(DateTime startTime)
         {

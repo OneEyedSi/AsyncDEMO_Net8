@@ -1,53 +1,28 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AsyncDEMO_Net8._1_SyncVersion
+namespace AwaitDemo
 {
-    internal class SyncBreakfastMaker
+    public abstract class AsyncBreakfastMakerBase
     {
-        public static void MakeBreakfast(DateTime startTime)
-        {
-            var textColor = ConsoleColor.DarkGray;
+        public abstract Task MakeBreakfastAsync(DateTime startTime);
 
-            ConsoleHelper.WriteInColor("Preparing breakfast:", textColor);
-
-            HeatFryingPan(startTime);
-
-            int numberOfEggs = 2;
-            List<Egg> eggs = FryEggs(numberOfEggs, startTime);
-
-            int numberOfBaconSlices = 3;
-            List<Bacon> baconSlices = FryBacon(numberOfBaconSlices, startTime);
-
-            Coffee cup = MakeCoffee(startTime);
-
-            int numberOfToastSlices = 2;
-            List<Toast> toastSlices = MakeToast(numberOfToastSlices, startTime);
-
-            SpreadButterOnToast(toastSlices, startTime);
-
-            SpreadJamOnToast(toastSlices, startTime);
-
-            Juice juice = PourJuice(startTime);
-
-            ConsoleHelper.WriteWithElapsedTime("Breakfast is ready!", startTime, textColor);
-        }
-
-        private static void HeatFryingPan(DateTime startTime)
+        protected async Task HeatFryingPanAsync(DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.HeatPan);
 
             taskInfo.WriteInTaskColor("Heating frying pan...");
 
-            Task.Delay(taskInfo.Duration).Wait();
+            await Task.Delay(taskInfo.Duration);
 
             taskInfo.WriteWithElapsedTime("Frying pan is hot", startTime);
         }
 
-        private static List<Egg> FryEggs(int numberOfEggs, DateTime startTime)
+        protected async Task<List<Egg>> FryEggsAsync(int numberOfEggs, DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.FryEggs);
 
@@ -55,7 +30,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
 
             List<Egg> eggs = new();
 
-            Task.Delay(taskInfo.Duration).Wait();
+            await Task.Delay(taskInfo.Duration);
 
             for (int i = 0; i < numberOfEggs; i++)
             {
@@ -67,7 +42,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
             return eggs;
         }
 
-        private static List<Bacon> FryBacon(int numberOfSlices, DateTime startTime)
+        protected async Task<List<Bacon>> FryBaconAsync(int numberOfSlices, DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.FryBacon);
 
@@ -75,7 +50,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
 
             List<Bacon> baconSlices = new();
 
-            Task.Delay(taskInfo.Duration).Wait();
+            await Task.Delay(taskInfo.Duration);
 
             for (int i = 0; i < numberOfSlices; i++)
             {
@@ -87,20 +62,20 @@ namespace AsyncDEMO_Net8._1_SyncVersion
             return baconSlices;
         }
 
-        private static Coffee MakeCoffee(DateTime startTime)
+        protected async Task<Coffee> MakeCoffeeAsync(DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.MakeCoffee);
 
             taskInfo.WriteInTaskColor("Making coffee...");
 
-            Task.Delay(taskInfo.Duration).Wait();
+            await Task.Delay(taskInfo.Duration);
 
             taskInfo.WriteWithElapsedTime("Coffee is ready", startTime);
 
             return new Coffee();
         }
 
-        private static List<Toast> MakeToast(int numberOfSlices, DateTime startTime)
+        protected async Task<List<Toast>> MakeToastAsync(int numberOfSlices, DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.MakeToast);
 
@@ -108,7 +83,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
 
             List<Toast> toastSlices = new();
 
-            Task.Delay(taskInfo.Duration).Wait();
+            await Task.Delay(taskInfo.Duration);
 
             for (int i = 0; i < numberOfSlices; i++)
             {
@@ -120,7 +95,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
             return toastSlices;
         }
 
-        private static void SpreadButterOnToast(List<Toast> toastSlices, DateTime startTime)
+        protected void SpreadButterOnToast(List<Toast> toastSlices, DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.SpreadButter);
 
@@ -131,7 +106,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
             taskInfo.WriteWithElapsedTime("Butter has been spread", startTime);
         }
 
-        private static void SpreadJamOnToast(List<Toast> toastSlices, DateTime startTime)
+        protected void SpreadJamOnToast(List<Toast> toastSlices, DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.SpreadJam);
 
@@ -142,7 +117,7 @@ namespace AsyncDEMO_Net8._1_SyncVersion
             taskInfo.WriteWithElapsedTime("Jam has been spread", startTime);
         }
 
-        private static Juice PourJuice(DateTime startTime)
+        protected Juice PourJuice(DateTime startTime)
         {
             var taskInfo = TaskInfo.GetTask(TaskId.PourJuice);
 
