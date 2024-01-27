@@ -11,4 +11,8 @@ namespace Common
         public const string SecondsFormat = "F1";
         public const string Indent = "    ";
     }
+    public static class TaskTag
+    {
+        public const string BreakfastTask = "BreakfastTask";
+    }
 }

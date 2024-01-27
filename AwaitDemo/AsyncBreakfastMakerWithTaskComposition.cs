@@ -1,4 +1,6 @@
-﻿using Common;
+﻿using AwaitDemo.Tasks;
+using Common;
+using Common.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +11,14 @@ namespace AwaitDemo
 {
     public class AsyncBreakfastMakerWithTaskComposition : AsyncBreakfastMakerBase
     {
+        public AsyncBreakfastMakerWithTaskComposition(TaskListBase<AwaitDemoTaskId> taskList)
+            : base(taskList) { }
+
         public override async Task MakeBreakfastAsync(DateTime startTime)
         {
-            var textColor = ConsoleColor.DarkGray;
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.MakeBreakfast);
 
-            ConsoleHelper.WriteInColor("Preparing breakfast:", textColor);
+            taskInfo.Write("Preparing breakfast:");
 
             // Problem: Deferring the await for heating the pan and frying the eggs doesn't work: 
             // The pan must be heated before frying the eggs and the eggs must be finished before 
@@ -42,7 +47,7 @@ namespace AwaitDemo
 
             Juice juice = PourJuice(startTime);
 
-            ConsoleHelper.WriteWithElapsedTime("Breakfast is ready!", startTime, textColor);
+            taskInfo.WriteWithElapsedTime("Breakfast is ready!", startTime);
         }
 
         private async Task<List<Toast>> PrepareToastAsync(int numberOfSlices, DateTime startTime)

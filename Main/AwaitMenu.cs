@@ -1,4 +1,5 @@
 ﻿using AwaitDemo;
+using AwaitDemo.Tasks;
 using Common;
 using Gold.ConsoleMenu;
 using System;
@@ -12,65 +13,76 @@ namespace Main
     [MenuClass("Await Menu", ParentMenuName = "Main Menu")]
     public class AwaitMenu
     {
+        private static readonly AwaitDemoTaskList _taskList = new AwaitDemoTaskList();
+        private static readonly ConsoleColor _defaultTextColor = ConsoleColor.Gray;
+
         [MenuMethod("List individual task durations", DisplayOrder = 1)]
         public static void DisplayTaskDurations()
         {
-            Console.WriteLine();
-            Console.WriteLine("Individual task durations:");
-            Console.WriteLine();
+            var taskInfo = (AwaitDemoTaskInfo)_taskList.GetTask(AwaitDemoTaskId.ListTaskDurations);
+            var messageWriter = taskInfo.MessageWriter;
+
+            taskInfo.Write();
+            taskInfo.Write("Individual task durations:");
+            taskInfo.Write();
 
             string indent = Constant.Indent;
 
-            Console.WriteLine($"{indent}Breakfast tasks:");
+            taskInfo.Write($"{indent}Breakfast tasks:");
             decimal breakfastTotalTaskDuration = 0M;
 
-            foreach (TaskInfo task in TaskInfo.GetTasks().Where(t => t.Id != TaskId.OtherWork))
+            foreach (var task in _taskList.GetTasks().Where(t => t.Tags.Contains(TaskTag.BreakfastTask)))
             {
-                Console.WriteLine(indent + indent + task.DurationText);
+                taskInfo.Write(indent + indent + task.DurationText);
                 breakfastTotalTaskDuration += task.DurationSeconds;
             }
 
             string message =
                 $"Total duration of breakfast tasks: {breakfastTotalTaskDuration.ToString(Constant.SecondsFormat)} seconds";
+            messageWriter.Write(indent + message, ConsoleColor.Yellow);
 
-            ConsoleHelper.WriteInColor(indent + message, ConsoleColor.Yellow);
-
-            TaskInfo otherWork = TaskInfo.GetTask(TaskId.OtherWork);
+            var otherWorkTask = _taskList.GetTask(AwaitDemoTaskId.OtherWork);
             message =
-                $"Other non-breakfast work performed by caller: {otherWork.DurationSeconds.ToString(Constant.SecondsFormat)} seconds";
-            ConsoleHelper.WriteInColor(indent + message, ConsoleColor.Yellow);
+                $"Other non-breakfast work performed by caller: {otherWorkTask.DurationText}";
+            messageWriter.Write(indent + message, ConsoleColor.Yellow);
 
             string horizontalDivider = new('-', message.Length);
 
-            decimal totalDuration = breakfastTotalTaskDuration + otherWork.DurationSeconds;
+            decimal totalDuration = breakfastTotalTaskDuration + otherWorkTask.DurationSeconds;
             message = $"TOTAL DURATION OF ALL TASKS: {totalDuration.ToString(Constant.SecondsFormat)} seconds";
-            Console.WriteLine(indent + horizontalDivider);
-            Console.WriteLine(indent + message);
+            taskInfo.Write(indent + horizontalDivider);
+            taskInfo.Write(indent + message);
 
-            Console.WriteLine();
+            taskInfo.Write();
+            Console.ForegroundColor = _defaultTextColor;
         }
 
         [MenuMethod("Make breakfast synchronously", DisplayOrder = 2)]
         public static void SyncBreakfast()
         {
-            Console.WriteLine();
-            Console.WriteLine("Making breakfast synchronously:");
-            Console.WriteLine();
+            var taskInfo = (AwaitDemoTaskInfo)_taskList.GetTask(AwaitDemoTaskId.BreakfastCaller);
+            var messageWriter = taskInfo.MessageWriter;
+
+            taskInfo.Write();
+            taskInfo.Write("Making breakfast synchronously:");
+            taskInfo.Write();
 
             var startTime = DateTime.Now;
 
-            SyncBreakfastMaker.MakeBreakfast(startTime);
+            var breakfastMaker = new SyncBreakfastMaker(_taskList);
+            breakfastMaker.MakeBreakfast(startTime);
 
             DoOtherWork(startTime);
-            Console.WriteLine();
+            taskInfo.Write();
 
-            ConsoleHelper.WriteTotalTimeTaken(startTime);
+            messageWriter.WriteTotalTimeTaken(startTime);
+            Console.ForegroundColor = _defaultTextColor;
         }
 
         [MenuMethod("Make breakfast asynchronously, with immediate await", DisplayOrder = 3)]
         public static void AsyncBreakfast_ImmediateAwait()
         {
-            var breakfastMaker = new AsyncImmediateAwaitBreakfastMaker();
+            var breakfastMaker = new AsyncImmediateAwaitBreakfastMaker(_taskList);
             var task = MakeBreakfastAsync("Making breakfast asynchronously, with immediate await:",
                 breakfastMaker.MakeBreakfastAsync);
             // Note that this leaves all exceptions in async code wrapped in an AggregateException.
@@ -81,7 +93,7 @@ namespace Main
         [MenuMethod("Make breakfast asynchronously, with deferred await", DisplayOrder = 4)]
         public static void AsyncBreakfast_DeferredAwait()
         {
-            var breakfastMaker = new AsyncDeferredAwaitBreakfastMaker();
+            var breakfastMaker = new AsyncDeferredAwaitBreakfastMaker(_taskList);
             var task = MakeBreakfastAsync("Making breakfast asynchronously, with deferred await:",
                 breakfastMaker.MakeBreakfastAsync);
             task.Wait();
@@ -90,7 +102,7 @@ namespace Main
         [MenuMethod("Make breakfast asynchronously, with deferred await and composition", DisplayOrder = 5)]
         public static void AsyncBreakfast_WithComposition()
         {
-            var breakfastMaker = new AsyncBreakfastMakerWithTaskComposition();
+            var breakfastMaker = new AsyncBreakfastMakerWithTaskComposition(_taskList);
             var task = MakeBreakfastAsync("Making breakfast asynchronously,\nwith deferred await and task composition:",
                 breakfastMaker.MakeBreakfastAsync);
             task.Wait();
@@ -99,7 +111,7 @@ namespace Main
         [MenuMethod("Make breakfast asynchronously, with mixed awaits and composition", DisplayOrder = 6)]
         public static void AsyncBreakfast_MixedAwaits()
         {
-            var breakfastMaker = new AsyncBreakfastMakerMixedAwaits();
+            var breakfastMaker = new AsyncBreakfastMakerMixedAwaits(_taskList);
             var task = MakeBreakfastAsync("Making breakfast asynchronously,\nwith mixed awaits and task composition:",
                 breakfastMaker.MakeBreakfastAsync);
             task.Wait();
@@ -107,15 +119,18 @@ namespace Main
 
         private static async Task MakeBreakfastAsync(string title, Func<DateTime, Task> makeBreakfastMethodAsync)
         {
+            var taskInfo = (AwaitDemoTaskInfo)_taskList.GetTask(AwaitDemoTaskId.BreakfastCaller);
+            var messageWriter = taskInfo.MessageWriter;
+
             title = title.Trim();
             if (!title.EndsWith(':'))
             {
                 title += ':';
             }
 
-            Console.WriteLine();
-            Console.WriteLine(title);
-            Console.WriteLine();
+            taskInfo.Write();
+            taskInfo.Write(title);
+            taskInfo.Write();
 
             var startTime = DateTime.Now;
 
@@ -125,16 +140,17 @@ namespace Main
 
             await task;
 
-            Console.WriteLine();
+            taskInfo.Write();
 
-            ConsoleHelper.WriteTotalTimeTaken(startTime);
+            messageWriter.WriteTotalTimeTaken(startTime);
+            Console.ForegroundColor = _defaultTextColor;
         }
 
         private static void DoOtherWork(DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.OtherWork);
+            var taskInfo = (AwaitDemoTaskInfo)_taskList.GetTask(AwaitDemoTaskId.OtherWork);
 
-            taskInfo.WriteInTaskColor("Caller doing other non-breakfast work...");
+            taskInfo.Write("Caller doing other non-breakfast work...");
 
             Task.Delay(taskInfo.Duration).Wait();
 

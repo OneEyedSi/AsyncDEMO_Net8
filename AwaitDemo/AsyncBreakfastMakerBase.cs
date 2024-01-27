@@ -1,4 +1,6 @@
-﻿using Common;
+﻿using AwaitDemo.Tasks;
+using Common;
+using Common.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +11,20 @@ namespace AwaitDemo
 {
     public abstract class AsyncBreakfastMakerBase
     {
+        protected readonly TaskListBase<AwaitDemoTaskId> _taskList;
+
+        public AsyncBreakfastMakerBase(TaskListBase<AwaitDemoTaskId> taskList)
+        {
+            _taskList = taskList;
+        }
+
         public abstract Task MakeBreakfastAsync(DateTime startTime);
 
         protected async Task HeatFryingPanAsync(DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.HeatPan);
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.HeatPan);
 
-            taskInfo.WriteInTaskColor("Heating frying pan...");
+            taskInfo.Write("Heating frying pan...");
 
             await Task.Delay(taskInfo.Duration);
 
@@ -24,9 +33,9 @@ namespace AwaitDemo
 
         protected async Task<List<Egg>> FryEggsAsync(int numberOfEggs, DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.FryEggs);
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.FryEggs);
 
-            taskInfo.WriteInTaskColor($"Frying {numberOfEggs} eggs...");
+            taskInfo.Write($"Frying {numberOfEggs} eggs...");
 
             List<Egg> eggs = new();
 
@@ -44,9 +53,9 @@ namespace AwaitDemo
 
         protected async Task<List<Bacon>> FryBaconAsync(int numberOfSlices, DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.FryBacon);
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.FryBacon);
 
-            taskInfo.WriteInTaskColor($"Frying {numberOfSlices} slices of bacon...");
+            taskInfo.Write($"Frying {numberOfSlices} slices of bacon...");
 
             List<Bacon> baconSlices = new();
 
@@ -64,9 +73,9 @@ namespace AwaitDemo
 
         protected async Task<Coffee> MakeCoffeeAsync(DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.MakeCoffee);
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.MakeCoffee);
 
-            taskInfo.WriteInTaskColor("Making coffee...");
+            taskInfo.Write("Making coffee...");
 
             await Task.Delay(taskInfo.Duration);
 
@@ -77,9 +86,9 @@ namespace AwaitDemo
 
         protected async Task<List<Toast>> MakeToastAsync(int numberOfSlices, DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.MakeToast);
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.MakeToast);
 
-            taskInfo.WriteInTaskColor($"Toasting {numberOfSlices} slices of bread...");
+            taskInfo.Write($"Toasting {numberOfSlices} slices of bread...");
 
             List<Toast> toastSlices = new();
 
@@ -97,9 +106,9 @@ namespace AwaitDemo
 
         protected void SpreadButterOnToast(List<Toast> toastSlices, DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.SpreadButter);
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.SpreadButter);
 
-            taskInfo.WriteInTaskColor($"Spreading butter on {toastSlices.Count} slices of toast...");
+            taskInfo.Write($"Spreading butter on {toastSlices.Count} slices of toast...");
 
             Task.Delay(taskInfo.Duration).Wait();
 
@@ -108,9 +117,9 @@ namespace AwaitDemo
 
         protected void SpreadJamOnToast(List<Toast> toastSlices, DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.SpreadJam);
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.SpreadJam);
 
-            taskInfo.WriteInTaskColor($"Spreading jam on {toastSlices.Count} slices of toast...");
+            taskInfo.Write($"Spreading jam on {toastSlices.Count} slices of toast...");
 
             Task.Delay(taskInfo.Duration).Wait();
 
@@ -119,9 +128,9 @@ namespace AwaitDemo
 
         protected Juice PourJuice(DateTime startTime)
         {
-            var taskInfo = TaskInfo.GetTask(TaskId.PourJuice);
+            var taskInfo = _taskList.GetTask(AwaitDemoTaskId.PourJuice);
 
-            taskInfo.WriteInTaskColor("Pouring orange juice...");
+            taskInfo.Write("Pouring orange juice...");
 
             Task.Delay(taskInfo.Duration).Wait();
 
